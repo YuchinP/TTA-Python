@@ -1,3 +1,8 @@
+'''CURRENT ERRORS: PITCHES THAT ARE BALLS ARE REGISTERING CORRECTLY
+                   HUGE ISSUES WITH WHEN THE BALL IS ACTUALLY HIT
+                   NAMELY AREAS THAT CONTAIN "atThePlate(strike,ball,BattersName)"
+'''                   
+
 import random
 import hitPer
 baseA = ['Single'] * 90 + ['Double'] * 32 + ['Triple'] * 5 + ['Home Run!!!'] * 37
@@ -11,10 +16,6 @@ baseH = ['Single'] * (50-8-4-6) + ['Double'] * 8 + ['Triple'] * 4 + ['Home Run!!
 baseI = ['Single'] * (128-28-21) + ['Double'] * 28 + ['Triple'] * 0 + ['Home Run!!!'] * 21
 baseJ = ['Single'] * (93-18-1-15) + ['Double'] * 18 + ['Triple'] * 1 + ['Home Run!!!'] * 15
 #These are the chances each batter has on what base they get on their hit
-
-def start(strike=0,ball=0,battersName=""):
-    battersName = atBat(battersName)
-    strike,ball,battersName = atThePlate(strike,ball,battersName)
 
 battersAL = {
     'josh donaldson' : ['TOR', .417, baseA],
@@ -32,6 +33,15 @@ battersNL = {
     }
 #List of AL/NL batters depending on which division the user chooses
 
+strike = 0
+ball = 0
+hit = 0
+
+def start(strike=0,ball=0,battersName=""):
+    battersName = atBat(battersName)
+    strike,ball,battersName = atThePlate(strike,ball,battersName)
+
+
 def atBat(battersName):
     try:
         battersInfo = battersAL[battersName]
@@ -43,7 +53,7 @@ def atBat(battersName):
 
 def atBatNL(battersName):
     try:
-        battersInfo = battersNL[battersName]
+        battersInfoNL = battersNL[battersName]
         print ('Batter: ' + battersName.title())
         print ('Team: ' + battersInfo[0])
         print ('Batting Avg: ' + str(battersInfo[1]))
@@ -67,50 +77,48 @@ while pickDiv == True:
         pickDiv = True
 #This is what allows them to pick the division they want to play for in the game
 
-while userWantsMoreAL == True:
-    battersName = input('Josh Donaldson \nBrock Holt \nElvis Andrus \nFrancisco Lindor \nEzequiel Carrera \nPlease select a batter: ').lower()
-    atBat(battersName)
-    searchAgain = input ('Do you want to bat with {}? (y/n) :'.format(battersName))
-    if searchAgain == 'y':
-        userWantsMoreAL = False
-        atThePlate = True
-    elif searchAgain == 'n':
-        userWantsMoreAL = True
-    else:
-        print ("Please Select a Valid Batter")
-        userWantsMoreAL = False
-#Selection and verification of the AL batter        
+def out(strike,ball,battersName):
+    print("\nThree Strikes and YOUUUUURRRRR OUT")
+    again(strike,ball,battersName)
 
-while userWantsMoreNL == True:
-    battersName = input('Joe Panik \nDaniel Murphy \nConor Gillaspie \nJayson Werth \nRyan Zimmerman \nPlease select a batter: ').lower()
-    atBatNL(battersName)
-    searchAgain = input ('Do you want to bat with {}?'.format(battersName))
-    if searchAgain == 'y':
-        userWantsMoreNL = False
-        atThePlate = True
-    elif searchAgain == 'n':
-        userWantsMoreNL = True
-    else:
-        print ("Please Select a Valid Batter")
-        userWantsMoreNL = False
-#Selection and verification of the NL batter
+def walk(strike,ball,battersName):
+    print("\nYou got walked! Nice Pressure!")
+    again(strike,ball,battersName)
 
-'''def pitch_game(battersName):
-    if name != "":
-        print ('{} steps up the the plate!'.format(battersName))
-        atThePlate = True
-    else:
-        pickDiv = True
-        atThePlate = False
-#Chains the batter selection to the actual game
-'''
+def hit(battersName):
+    print("\nNice Hit! Your team cheers you on!")
+    again(strike,ball,battersName)
+
+def again(strike,ball,battersName):
+    stop = True
+    while stop:
+        choice = input("\Do you want to try another batter? (y/n)").lower()
+        if choice == "y":
+            reset(strike,ball,battersName)
+            stop = False
+        if choice == "n":
+            print("\nSee you next time slugger")
+            stop = False
+            exit()
+        else:
+            print("\nPlease enter 'y' for yes or 'n' for no")
+
+def reset(strike,ball,battersName):
+    strike = 0
+    ball = 0
+    battersName = 0
+    start(strike,ball,battersName)
+
+
 def atThePlate(strike,ball,battersName):
-    #atThePlate = True
+    atThePlate = True
     while atThePlate == True:
+        battersInfo = battersAL[battersName]
+        pitchOptions = ['It looks like its a Fastball! Swing? (y/n)'] + ['It looks like its a Curveball! Swing? (y/n)'] + ['It looks like its a Slider! Swing? (y/n)'] + ['It looks like its a Change-Up! Swing? (y/n)'] + ['It looks like its going to be a Ball! Swing? (y/n)'] * 5
         show_count(strike,ball,battersName) #Show the count before every pitch
         pitch = input(random.choice(pitchOptions)).lower() #Selects one of the random pitches in the PitchOptions below
         if pitchOptions == "It looks like its going to be a Ball! Swing? (y/n)" and pitch == "y": #If they swing at the ball
-            print("\nSwing and a Miss that's a STRIKE!")
+            print ("\nSwing and a Miss that's a STRIKE!")
             strike = (strike + 1)
             atThePlate = False
         elif pitchOptions == "It looks like its going to be a Ball! Swing? (y/n)" and pitch == "n": #If they don't swing at the ball
@@ -119,9 +127,9 @@ def atThePlate(strike,ball,battersName):
             atThePlate = False
         elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n)" and (battersInfo[1] > hitPer.hitPercent(0)) and pitch == "y": 
             print("\nThat's a hit! You got a") #Measure's their hitting average against a random number from the hitPer.py file and in this one they hit
-            print (random.choice(battersInfo(2)))
+            print (str(random.choice(battersInfo[2])))
             hit = (hit + 1)
-            atThePlate = True
+            atThePlate = False
         elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n)" and (battersInfo[1] < hitPer.hitPercent(0)) and pitch == "y":
             print("\nSwing and a Miss that's a STRIKE!") #Same as above except they roll poorly and will miss the pitch
             strike = (strike + 1)
@@ -137,15 +145,8 @@ def atThePlate(strike,ball,battersName):
         else:
             print("\Press 'y' to swing at the pitch and 'n' to not swing at the pitch! Try again!")
             atThePlate = False
-        count(strike,ball,battersName)
+        score(strike,ball,battersName)
 #This is the likely buggy game itself of pitching/batting
-
-            
-pitchOptions = ['It looks like its a Fastball! Swing? (y/n)'] + ['It looks like its a Curveball! Swing? (y/n)'] + ['It looks like its a Slider! Swing? (y/n)'] + ['It looks like its a Change-Up! Swing? (y/n)'] + ['It looks like its going to be a Ball! Swing? (y/n)'] * 5
-
-
-def show_count(strike,ball,battersName):
-    print("\n{}, your count is {}-{} (Strikes-Balls).".format(battersName,strike,ball))
 
 def score(strike,ball,battersName):
     if strike >= 3:
@@ -155,38 +156,46 @@ def score(strike,ball,battersName):
     else:
         atThePlate(strike,ball,battersName)
 
-def out(strike,ball,battersName):
-    print("\nThree Strikes and YOUUUUURRRRR OUT")
-    again(strike,ball,battersName)
+def show_count(strike,ball,battersName):
+    print("\n{}, your count is {}-{} (Strikes-Balls).".format(battersName,strike,ball))
 
-def walk(strike,ball,battersName):
-    print("\nYou got walked! Nice Pressure!")
-    again(strike,ball,battersName)
+while userWantsMoreAL == True:
+    battersName = input('Josh Donaldson \nBrock Holt \nElvis Andrus \nFrancisco Lindor \nEzequiel Carrera \nPlease select a batter: ').lower()
+    atBat(battersName)
+    searchAgain = input ('Do you want to bat with {}? (y/n) :'.format(battersName))
+    if searchAgain == 'y':
+        atThePlate(strike,ball,battersName)
+        userWantsMoreAL = False
+    elif searchAgain == 'n':
+        userWantsMoreAL = True
+    else:
+        print ("Please Select a Valid Batter")
+        userWantsMoreAL = False
+#Selection and verification of the AL batter        
 
-def hit(strike,ball,battersName):
-    print("\nNice Hit! Your team cheers you on!")
-    again(strike,ball,battersName)
+while userWantsMoreNL == True:
+    battersName = input('Joe Panik \nDaniel Murphy \nConor Gillaspie \nJayson Werth \nRyan Zimmerman \nPlease select a batter: ').lower()
+    atBatNL(battersName)
+    searchAgain = input ('Do you want to bat with {}?'.format(battersName))
+    if searchAgain == 'y':
+        userWantsMoreNL = False
+    elif searchAgain == 'n':
+        userWantsMoreNL = True
+    else:
+        print ("Please Select a Valid Batter")
+        userWantsMoreNL = False
+#Selection and verification of the NL batter
 
-def again(strike,ball,battersName):
-    stop = True
-    while stop:
-        choice = input("\Do you want to try another batter? (y/n)").lower()
-        if choice == "y":
-            stop = False
-            reset(strike,ball,battersName)
-        if choice == "n":
-            print("\nSee you next time slugger")
-            stop = False
-            exit()
-        else:
-            print("\nPlease enter 'y' for yes or 'n' for no")
-
-def reset(strike,ball,battersName):
-    strike = 0
-    ball = 0
-    battersName = 0
-    start(strike,ball,battersName)
+def pitch_game(battersName):
+    if name != "":
+        print ('{} steps up the the plate!'.format(battersName))
+        atThePlate = True
+    else:
+        pickDiv = True
+        atThePlate = False
+#Chains the batter selection to the actual game
 
 
-
+if __battersName__ == "__main__":
+    start()
     
