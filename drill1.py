@@ -114,31 +114,31 @@ def atThePlate(strike,ball,battersName):
     atThePlate = True
     while atThePlate == True:
         battersInfo = battersAL[battersName]
-        pitchOptions = ['It looks like its a Fastball! Swing? (y/n)'] + ['It looks like its a Curveball! Swing? (y/n)'] + ['It looks like its a Slider! Swing? (y/n)'] + ['It looks like its a Change-Up! Swing? (y/n)'] + ['It looks like its going to be a Ball! Swing? (y/n)'] * 5
+        pitchOptions = ["It looks like its a Fastball! Swing? (y/n) :"] + ['It looks like its a Curveball! Swing? (y/n) :'] + ['It looks like its a Slider! Swing? (y/n) :'] + ['It looks like its a Change-Up! Swing? (y/n) :'] + ['It looks like its going to be a Ball! Swing? (y/n) :']* 5
         show_count(strike,ball,battersName) #Show the count before every pitch
         pitch = input(random.choice(pitchOptions)).lower() #Selects one of the random pitches in the PitchOptions below
-        if pitchOptions == "It looks like its going to be a Ball! Swing? (y/n)" and pitch == "y": #If they swing at the ball
+        if pitchOptions == "It looks like its going to be a Ball! Swing? (y/n) :" and pitch == "y": #If they swing at the ball
             print ("\nSwing and a Miss that's a STRIKE!")
             strike = (strike + 1)
             atThePlate = False
-        elif pitchOptions == "It looks like its going to be a Ball! Swing? (y/n)" and pitch == "n": #If they don't swing at the ball
+        elif pitchOptions == "It looks like its going to be a Ball! Swing? (y/n) :" and pitch == "n": #If they don't swing at the ball
             print("\nGood Eye! That's a BALL")
             ball = (ball + 1)
             atThePlate = False
-        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n)" and (battersInfo[1] > hitPer.hitPercent(0)) and pitch == "y": 
+        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n) :" and (battersInfo[1] > hitPer.hitPercent(0)) and pitch == "y": 
             print("\nThat's a hit! You got a") #Measure's their hitting average against a random number from the hitPer.py file and in this one they hit
             print (str(random.choice(battersInfo[2])))
             hit = (hit + 1)
             atThePlate = False
-        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n)" and (battersInfo[1] < hitPer.hitPercent(0)) and pitch == "y":
+        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n) :" and (battersInfo[1] < hitPer.hitPercent(0)) and pitch == "y":
             print("\nSwing and a Miss that's a STRIKE!") #Same as above except they roll poorly and will miss the pitch
             strike = (strike + 1)
             atThePlate = False
-        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n)" and (hitPer.hitPercent(0) > 0.444) and pitch == "n":
-            print("\nSwing and a Miss that's a STRIKE!") #Strike pitch but it isn't swung at
+        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n) :" and (hitPer.hitPercent(0) > 0.444) and pitch == "n":
+            print("\nStraight up the Middle! STRIKE!") #Strike pitch but it isn't swung at
             strike = (strike + 1)
             atThePlate = False
-        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n)" and (hitPer.hitPercent(0) < 0.444) and pitch == "n":
+        elif pitchOptions != "It looks like its going to be a Ball! Swing? (y/n) :" and (hitPer.hitPercent(0) < 0.444) and pitch == "n":
             print("\nGood Eye! That's a BALL") #Ball pitch that isn't swung at
             ball = (ball + 1)
             atThePlate = False
@@ -157,7 +157,7 @@ def score(strike,ball,battersName):
         atThePlate(strike,ball,battersName)
 
 def show_count(strike,ball,battersName):
-    print("\n{}, your count is {}-{} (Strikes-Balls).".format(battersName,strike,ball))
+    print("\n{}, your count is {}-{} (Balls-Strikes).".format(battersName,strike,ball))
 
 while userWantsMoreAL == True:
     battersName = input('Josh Donaldson \nBrock Holt \nElvis Andrus \nFrancisco Lindor \nEzequiel Carrera \nPlease select a batter: ').lower()
