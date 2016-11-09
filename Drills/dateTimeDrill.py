@@ -10,16 +10,50 @@
 ##Create code that will use the current time of the Portland HQ to find out the time in the NYC &
 ##London branches, then compare that time with the branches hours to see if they are open or
 ##closed.
-##Print out if each of the two branches are open or closed.
+##Print out if each of the two branches are open or closed.
 
-from datetime import datetime
-from time import strftime
+##Modules
+import datetime
+from datetime import *
+import pytz
+from pytz import *
 
-##Currently in Tuples need it to not be so it can be adjusted. At least the Time Portion needs to be seperated and changed
-format = "%a %b %d %Y %I:%M:%S %p"
-s = datetime.now().strftime(format)
-print ('Portland Date/Time:', s)
-print (s)
+##Compares the current hour of the branch to whether or not they fit in the open range
+def is_it_closed(x):
+    if branch_open <= x and x <= branch_close:
+        print ('This Location is Open!')
+    else:
+        print('This Location is Closed!')
 
-#print ('Portland Date and Time: ', datetime.now(s))
-#print ('New York Date and Time: ', (datetime.now()+3:00:00))
+##Defines the hours the branches are open and closed
+branch_close = time(hour=22,minute=0,second=0)
+branch_open = time(hour=9,minute=0,second=0)        
+
+##Defines the 3 timezones that are going to be used
+utc_time = datetime.utcnow()
+tz = timezone('America/Los_Angeles')
+etz = timezone('America/New_York')
+ltz = timezone('Europe/London')
+
+##Converts the general UTC time to the correct timezone needed
+P = pytz.utc.localize(utc_time).astimezone(tz)
+NY = pytz.utc.localize(utc_time).astimezone(etz)
+LON = pytz.utc.localize(utc_time).astimezone(ltz)
+
+##Converts the datetime objects to time types
+Portland = time(hour = P.hour) 
+New_York = time(hour = NY.hour)
+London = time(hour = LON.hour)
+
+##Printing and determinations of the branches
+print('Portland Date and time: ', P)
+is_it_closed(Portland)
+print('New York Date and time: ', NY)
+is_it_closed(New_York)
+print('London Date and time: ', LON)
+is_it_closed(London)
+
+
+
+
+
