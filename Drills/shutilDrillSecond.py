@@ -1,7 +1,6 @@
 import os
 import shutil
 from datetime import *
-from time import *
 
 path = os.listdir('C:\\Users\\Student\\Desktop\\Folder B')
 destination = 'C:\\Users\\Student\\Desktop\\Folder A'
