@@ -22,7 +22,7 @@ def the_mover(src, dest):
     for files in path:
         if files.endswith('.txt'):
             get_time(files)
-            if get_time(files) > 86400:
+            if get_time(files) < 86400:
                 shutil.move(files, destination)
                 print('Text files from', source, 'have been moved to', destination)
             else:
