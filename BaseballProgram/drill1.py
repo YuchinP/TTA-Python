@@ -1,4 +1,3 @@
-
 '''CURRENT ERRORS: PITCHES THAT ARE BALLS ARE REGISTERING CORRECTLY
                    HUGE ISSUES WITH WHEN THE BALL IS ACTUALLY HIT
                    NAMELY AREAS THAT CONTAIN "atThePlate(strike,ball,BattersName)"
@@ -6,7 +5,9 @@
 
 import random
 import hitPer
-import pitchOptions
+
+#These are the chances each batter has on what base they get on their hit
+
 baseA = ['Single'] * 90 + ['Double'] * 32 + ['Triple'] * 5 + ['Home Run!!!'] * 37
 baseB = ['Single'] * 51 + ['Double'] * 16 + ['Triple'] * 0 + ['Home Run!!!'] * 7
 baseC = ['Single'] * (153-31-7-8) + ['Double'] * 31 + ['Triple'] * 7 + ['Home Run!!!'] * 8
@@ -17,7 +18,12 @@ baseG = ['Single'] * (184-47-5-25) + ['Double'] * 47 + ['Triple'] * 5 + ['Home R
 baseH = ['Single'] * (50-8-4-6) + ['Double'] * 8 + ['Triple'] * 4 + ['Home Run!!!'] * 6
 baseI = ['Single'] * (128-28-21) + ['Double'] * 28 + ['Triple'] * 0 + ['Home Run!!!'] * 21
 baseJ = ['Single'] * (93-18-1-15) + ['Double'] * 18 + ['Triple'] * 1 + ['Home Run!!!'] * 15
-#These are the chances each batter has on what base they get on their hit
+
+Pfast = 'It looks like its a Fastball!'
+Pcurve = 'It looks like its a Curveball!'
+Pslider = 'It looks like its a Slider! Swing?'
+Pchange = 'It looks like its a Change-Up! Swing?'
+Pball = 'It looks like its going to be a Ball!'
 
 battersAL = {
     'josh donaldson' : ['TOR', .417, baseA],
@@ -33,6 +39,8 @@ battersNL = {
     'jayson werth' : ['WSH', .389, baseI],
     'ryan zimmerman' : ['WSH', .353, baseJ]
     }
+
+
 #List of AL/NL batters depending on which division the user chooses
 
 strike = 0
@@ -87,7 +95,7 @@ def walk(strike,ball,battersName):
     print("\nYou got walked! Nice Pressure!")
     again(strike,ball,battersName)
 
-def hit(battersName):
+def hit(strike,ball,battersName):
     print("\nNice Hit! Your team cheers you on!")
     again(strike,ball,battersName)
 
@@ -108,18 +116,44 @@ def again(strike,ball,battersName):
 def reset(strike,ball,battersName):
     strike = 0
     ball = 0
-    battersName = 0
+    battersName = ""
     start(strike,ball,battersName)
+
+def pitchOptions():
+    x = [Pfast, Pcurve, Pslider, Pchange, Pball, Pball, Pball, Pball]   
+    print(random.choice(x))
 
 
 def atThePlate(strike,ball,battersName):
     atThePlate = True
+    battersInfo = battersAL[battersName]
     while atThePlate == True:
-        battersInfo = battersAL[battersName]
         show_count(strike,ball,battersName) #Show the count before every pitch
-        pitch = input(random.choice(pitchOptions)).lower() #Selects one of the random pitches in the PitchOptions below
-        if pitchOptions == 
-    
+        x = pitchOptions()
+        print(x)
+        swing = input("\nSwing? (y/n) : ").lower()
+        if x == Pball and swing == "y":
+            print("miss")
+            strike = (strike + 1)
+            atThePlate = True
+        elif x == Pball and swing == "n":
+            print("good eye")
+            ball = (ball + 1)
+            atThePlate == True
+        elif x != Pball and swing == "y":
+            print("hit")
+            print (random.choice(battersInfo[2]))
+            hit(strike,ball,battersName)
+            atThePlate = False
+        elif x != Pball and swing == "n":
+            print("down the middle")
+            strike = (strike + 1)
+            atThePlate = True
+        else:    
+            print("select y or n")
+            atThePlate = True
+            
+            
 ##        if pitchOptions == "It looks like its going to be a Ball! Swing? (y/n) :" and pitch == "y": #If they swing at the ball
 ##            print ("\nSwing and a Miss that's a STRIKE!")
 ##            strike = (strike + 1)
@@ -160,7 +194,7 @@ def score(strike,ball,battersName):
         atThePlate(strike,ball,battersName)
 
 def show_count(strike,ball,battersName):
-    print("\n{}, your count is {}-{} (Balls-Strikes).".format(battersName,strike,ball))
+    print("\n{}, your count is {}-{} (Strike-Balls).".format(battersName,strike,ball))
 
 while userWantsMoreAL == True:
     battersName = input('Josh Donaldson \nBrock Holt \nElvis Andrus \nFrancisco Lindor \nEzequiel Carrera \nPlease select a batter: ').lower()
@@ -201,4 +235,3 @@ def pitch_game(battersName):
 
 if __battersName__ == "__main__":
     start()
-    
