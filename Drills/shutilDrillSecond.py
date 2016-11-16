@@ -2,10 +2,11 @@ import os
 import shutil
 from datetime import *
 
-path = os.listdir('C:\\Users\\Student\\Desktop\\Folder B')
-destination = 'C:\\Users\\Student\\Desktop\\Folder A'
 
-os.chdir('C:\\Users\\Student\\Desktop\\Folder B')
+path = os.listdir('C:\\Users\\Student\\Desktop\\Folder A')
+destination = 'C:\\Users\\Student\\Desktop\\Folder B'
+
+os.chdir('C:\\Users\\Student\\Desktop\\Folder A')
 
         
 def get_time(files):
@@ -18,7 +19,7 @@ def get_time(files):
 
 
 def the_mover(src, dest):
-    source = 'C:\\Users\\Student\\Desktop\\Folder B'
+    source = 'C:\\Users\\Student\\Desktop\\Folder A'
     for files in path:
         if files.endswith('.txt'):
             get_time(files)
