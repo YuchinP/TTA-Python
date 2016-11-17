@@ -19,6 +19,36 @@ def create_db(self):
     );")
         conn.commit()
     conn.close()
+    first_run(self)
+
+def first_run(self):
+    conn = sqlite3.connect('timestamp.db')
+    with conn:
+        cur = conn.cursor()
+        cur,count = count_records(cur)
+        if count < 1:
+            cur.execute("""INSERT INTO tbl_timestamp (tsp) VALUES (?)""",('Never',))
+            conn.commit()
+    conn.close()
+
+
+def count_records(cur):
+    count = ""
+    cur.execute("""SELECT COUNT(*) FROM tbl_timestamp""")
+    count = cur.fetchone()[0]
+    return cur,count
+
+def timer(self):
+    conn = sqlite3.connect('timestamp.db')
+    with conn:
+        cursor = conn.cursor()
+        recent = cursor.execute("SELECT tsp FROM tbl_timestamp ORDER BY tsp DESC LIMIT 1").fetchone()
+        print (str(recent))
+        self.LbStamp.config(text = "Last File Check at : " + str(recent))
+        conn.commit()
+    conn.close()    
+
+
 
 #   Defines the browsing and selecting for the folders
 def folderselect1(self):
@@ -61,7 +91,6 @@ def show_files(self):
 
 #   The main file mover         
 def the_mover(self):
-    create_db(self)
     source = self.path
     con_prompt(self)
     for files in os.listdir(self.path):
@@ -78,9 +107,10 @@ def the_mover(self):
                 with conn:
                     cursor = conn.cursor()
                     cursor.execute("INSERT INTO tbl_timestamp (tsp) VALUES (?)", (datetime.now(),))
-                    recent = cursor.execute("SELECT tsp FROM tbl_timestamp ORDER BY tsp DESC LIMIT 1").fetchone()
-                    print (str(recent))
-                    self.timestamp = ttk.Label(self.frame5, text = "Last File Check at : " + str(recent)).pack()
+                    cursor.execute("DELETE FROM tbl_timestamp WHERE tsp = 'Never'")
+                    recent2 = cursor.execute("SELECT tsp FROM tbl_timestamp ORDER BY tsp DESC LIMIT 1").fetchone()
+                    print (str(recent2))
+                    self.LbStamp.config(text = "Last File Check at : " + str(recent2))
                     conn.commit()
                 conn.close()                             
             else:

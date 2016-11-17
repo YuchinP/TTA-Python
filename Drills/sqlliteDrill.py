@@ -51,8 +51,13 @@ class ShutilUI(Frame):
         self.button.grid(row = 0, column = 3, padx = 40)
         self.executer.grid(row = 0, column = 4, padx = 40)
         
-        self.path = ''      
+        self.path = ''
         self.destination = ''
+        self.LbStamp = ttk.Label(self.frame5, text = "Last File Check at:")
+        self.LbStamp.pack()
+        
+        sqlliteFunc.create_db(self)
+        sqlliteFunc.timer(self)
         
 if __name__=='__main__':
     root = Tk()
