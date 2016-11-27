@@ -42,7 +42,7 @@ def timer(self):
     conn = sqlite3.connect('timestamp.db')
     with conn:
         cursor = conn.cursor()
-        recent = cursor.execute("SELECT tsp FROM tbl_timestamp ORDER BY tsp DESC LIMIT 1").fetchone()
+        recent = cursor.execute("SELECT tsp FROM tbl_timestamp ORDER BY tsp DESC LIMIT 1").fetchone()[0]
         print (str(recent))
         self.LbStamp.config(text = "Last File Check at : " + str(recent))
         conn.commit()
