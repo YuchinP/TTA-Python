@@ -33,7 +33,7 @@ def build_table_text(data_sample, brands):
     for b in unique_brand_list:
         b = bytes.decode(b)
         temp_row = []
-        group1 = count_prices_for_brands(data_sample, b, 0 , 50.00)
+        group1 = count_prices_for_brands(data_sample, b, 0, 50.00)
         group2 = count_prices_for_brands(data_sample, b, 50.00 , 100.00)
         group3 = count_prices_for_brands(data_sample, b, 100.00 , 150.00)
         group4 = count_prices_for_brands(data_sample, b, 150.00 , 200.00)
@@ -49,7 +49,7 @@ def build_table_text(data_sample, brands):
     return(cell_text, row_text)
 
 def create_table(data_sample, price_groups, brand_names, columns, exported_figure_filename):
-    tup = build_table_text(data_sample,brand_names)
+    tup = build_table_text(data_sample,brands)
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
 
@@ -91,10 +91,18 @@ def group_prices_by_range(prices_in_float):
         tally[bucket] += 1
     return tally
 
+def open_with_csv2(filename, d = ','):
+    data = []
+    with open(filename, encoding='utf-8') as tsvin:
+        tie_reader = csv.reader(tsvin, delimiter ='\t')
+        for line in tie_reader:
+            data.append(line)
+    return data
+
 
 
 brands = my_csv['brandName']
 columns = ["$0-50", "$50-100", "$100-150", "$150-200", "$200-250", "$250+"]
 write_brand_and_price_file("data/tempTableFile.csv", data_from_csv)
-brand_and_price_data = open_with_csv("data/tempTableFile.csv", d=',')
+brand_and_price_data = open_with_csv2("data/tempTableFile.csv", d = ',')
 create_table(brand_and_price_data, price_groups, brands, columns, "charts/s5_prices_in_table.png")
